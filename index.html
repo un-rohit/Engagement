@@ -176,6 +176,31 @@
       textarea {
         font-size: 16px !important;
       }
+
+      /* Custom Modal Styles */
+      #thankYouModal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      #thankYouModal.show {
+        display: flex;
+        opacity: 1;
+      }
+      .modal-content {
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      #thankYouModal.show .modal-content {
+        transform: scale(1);
+      }
     </style>
   </head>
   <body>
@@ -245,16 +270,28 @@
         </h1>
 
         <div
-          class="inline-block px-6 py-3 border-y border-emerald-100/60 mb-8 bg-white/20 backdrop-blur-sm rounded-sm"
+          class="inline-block px-6 py-3 border-y border-emerald-100/60 mb-8 bg-white/20 backdrop-blur-sm rounded-sm clickable-date"
         >
-          <p class="text-xl sm:text-2xl font-serif text-emerald-900">
-            22nd February 2026
-          </p>
-          <p
-            class="text-[10px] tracking-[0.2em] text-secondary font-bold mt-0.5"
+          <a
+            href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Engagement:+Sunny+%26+Karishma&dates=20260222T133000/20260222T170000&details=We+request+the+honor+of+your+presence+at+our+engagement+ceremony.&location=The+Pearl,+Mahaveer+Trade+Centre,+Gamhariya"
+            target="_blank"
+            class="block"
           >
-            SAVE THE DATE
-          </p>
+            <p class="text-xl sm:text-2xl font-serif text-emerald-900">
+              22nd February 2026
+            </p>
+            <p
+              class="text-[10px] tracking-[0.2em] text-secondary font-bold mt-0.5 flex items-center justify-center gap-1"
+            >
+              SAVE THE DATE <span class="text-xs">📅</span>
+            </p>
+            <p
+              id="calendar-hint"
+              class="text-[8px] text-emerald-800/60 mt-1 italic normal-case transition-opacity duration-1000 opacity-0"
+            >
+              (click to add to calendar)
+            </p>
+          </a>
         </div>
       </div>
 
@@ -411,6 +448,27 @@
       />
     </audio>
 
+    <!-- Thank You Modal -->
+    <div id="thankYouModal">
+      <div
+        class="modal-content glass p-8 rounded-[2rem] max-w-sm mx-4 text-center border-2 border-emerald-100/50 shadow-2xl bg-white/90 relative"
+      >
+        <div class="text-6xl mb-4 animate-bounce">💌</div>
+        <h3 class="font-serif text-2xl text-emerald-800 mb-2">
+          Thank You for the Love 💞
+        </h3>
+        <p class="text-gray-600 mb-6 font-serif italic text-sm">
+          Your blessings mean the world to us💗.
+        </p>
+        <button
+          onclick="closeModal()"
+          class="bg-emerald-800 text-white px-8 py-3 rounded-full font-bold uppercase tracking-widest text-[10px] shadow-lg active:scale-95 transition-transform"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
     <script>
       // --- SCROLL REVEAL ---
       const observer = new IntersectionObserver(
@@ -495,13 +553,23 @@
           },
         );
 
-        alert("Thank you for your blessing ❤️");
+        showModal(); // Replace native alert
 
         nameInput.value = "";
         wishInput.value = "";
 
         flowerShower();
         if (navigator.vibrate) navigator.vibrate(50);
+      }
+
+      function showModal() {
+        const modal = document.getElementById("thankYouModal");
+        modal.classList.add("show");
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("thankYouModal");
+        modal.classList.remove("show");
       }
 
       // --- AUDIO ---
@@ -517,6 +585,14 @@
         }
         playing = !playing;
       }
+
+      // --- CALENDAR HINT DELAY ---
+      setTimeout(() => {
+        const hint = document.getElementById("calendar-hint");
+        if (hint) {
+          hint.classList.remove("opacity-0");
+        }
+      }, 6000);
     </script>
   </body>
 </html>
