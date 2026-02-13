@@ -21,25 +21,34 @@
         --bg-light: #fdfaf7;
       }
 
-      /* Prevent unwanted horizontal scroll and optimize touch */
       html,
       body {
         max-width: 100vw;
+        height: 100vh; /* Force full height */
+        overflow-y: scroll; /* Allow vertical scroll */
         overflow-x: hidden;
         -webkit-text-size-adjust: 100%;
-        touch-action: manipulation;
-        scroll-snap-type: y mandatory;
+        touch-action: pan-y; /* Allow vertical swipe */
+        scroll-snap-type: y mandatory; /* Enforce snapping */
+        scroll-behavior: smooth;
       }
 
       body {
         font-family: "Montserrat", sans-serif;
         background-color: var(--bg-light);
         color: #2d3436;
-        scroll-behavior: smooth;
       }
 
       section {
+        height: 100vh; /* Exact viewport height */
+        width: 100%;
         scroll-snap-align: start;
+        scroll-snap-stop: always; /* Force stop at each section */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden; /* Hide overflow within sections */
       }
 
       .font-script {
@@ -184,10 +193,10 @@
     </header>
 
     <!-- Hero Section -->
-    <section
-      class="min-h-screen flex flex-col items-center justify-center px-4 py-10 text-center relative overflow-hidden"
-    >
-      <div class="reveal active relative z-10 w-full">
+    <section class="h-screen bg-transparent relative">
+      <div
+        class="reveal active relative z-10 w-full flex flex-col items-center justify-center"
+      >
         <p
           class="text-secondary italic mb-4 font-serif text-base tracking-wide px-4"
         >
@@ -260,9 +269,7 @@
     </section>
 
     <!-- Engagement Spotlight -->
-    <section
-      class="min-h-screen flex flex-col items-center justify-center px-4 py-8 sm:py-16 bg-emerald-900 text-white relative overflow-hidden"
-    >
+    <section class="h-screen bg-emerald-900 text-white relative">
       <div class="max-w-md mx-auto text-center relative z-10 reveal">
         <h3 class="font-serif italic text-emerald-200 text-lg mb-2">
           The Engagement Ceremony
@@ -312,10 +319,8 @@
     </section>
 
     <!-- Family Section -->
-    <section
-      class="min-h-screen flex flex-col items-center justify-center px-4 py-8 sm:py-16 bg-emerald-50 text-center relative"
-    >
-      <div class="reveal max-w-sm mx-auto">
+    <section class="h-screen bg-emerald-50 text-center relative">
+      <div class="reveal max-w-sm mx-auto p-4">
         <h2
           class="font-script text-5xl sm:text-6xl text-emerald-800 mb-6 sm:mb-10"
         >
@@ -366,11 +371,9 @@
     </section>
 
     <!-- Guestbook & Footer Combined -->
-    <section
-      class="min-h-screen flex flex-col items-center justify-center py-8 sm:py-16 px-4 bg-white relative"
-    >
+    <section class="h-screen bg-white relative">
       <div
-        class="max-w-sm mx-auto text-center reveal w-full flex-grow flex flex-col justify-center"
+        class="max-w-sm mx-auto text-center reveal w-full flex-grow flex flex-col justify-center px-4"
       >
         <h2
           class="font-script text-4xl sm:text-5xl text-emerald-800 mb-2 sm:mb-3"
