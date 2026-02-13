@@ -318,7 +318,6 @@
       </div>
     </section>
 
-
     <!-- Guestbook & Footer Combined -->
     <section class="h-screen bg-white relative">
       <div
@@ -336,6 +335,7 @@
         <div
           class="bg-emerald-50/40 p-4 sm:p-5 rounded-[2rem] border border-emerald-100/80 mb-4"
         >
+          <!--
           <div
             id="wishes-container"
             class="space-y-3 mb-4 sm:mb-6 max-h-48 sm:max-h-60 overflow-y-auto pr-1 text-left custom-scroll"
@@ -350,6 +350,7 @@
               </p>
             </div>
           </div>
+          -->
 
           <div class="flex flex-col gap-2.5">
             <input
@@ -469,32 +470,37 @@
       function addWish() {
         const nameInput = document.getElementById("guest-name");
         const wishInput = document.getElementById("guest-wish");
+
         const name = nameInput.value.trim();
         const wish = wishInput.value.trim();
-        if (!name || !wish) return;
 
-        const wishEl = document.createElement("div");
-        wishEl.className =
-          "p-3.5 bg-white/90 rounded-2xl shadow-sm text-[11px] border-l-3 border-emerald-500 transform transition-all duration-300 scale-95 opacity-0";
-        wishEl.innerHTML = `<p class="font-bold text-emerald-800 mb-1">${name}:</p><p class="text-gray-600 italic">"${wish}"</p>`;
+        if (!name || !wish) {
+          alert("Please fill all fields");
+          return;
+        }
 
-        const container = document.getElementById("wishes-container");
-        container.prepend(wishEl);
+        // Send to Google Sheets (via Apps Script)
+        fetch(
+          "https://script.google.com/macros/s/AKfycby-JQIbbG6p_IlmEi5rQWPPMFzlEOW7sTJiNdMYaVbM6E3ii37QomzKmEDf_jKNuPCNJQ/exec",
+          {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: name,
+              blessing: wish,
+            }),
+          },
+        );
 
-        setTimeout(() => {
-          wishEl.classList.remove("scale-95", "opacity-0");
-        }, 10);
-
-        // Send to WhatsApp
-        const phoneNumber = "918651978460";
-        const message = `Blessing from *${name}*: ${wish}`;
-        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        alert("Thank you for your blessing ❤️");
 
         nameInput.value = "";
         wishInput.value = "";
-        container.scrollTo({ top: 0, behavior: "smooth" });
-        flowerShower();
 
+        flowerShower();
         if (navigator.vibrate) navigator.vibrate(50);
       }
 
