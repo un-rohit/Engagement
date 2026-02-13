@@ -485,6 +485,11 @@
           wishEl.classList.remove("scale-95", "opacity-0");
         }, 10);
 
+        // Send to WhatsApp
+        const phoneNumber = "918651978460";
+        const message = `Blessing from *${name}*: ${wish}`;
+        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+
         nameInput.value = "";
         wishInput.value = "";
         container.scrollTo({ top: 0, behavior: "smooth" });
