@@ -432,8 +432,8 @@
       </button>
     </div>
 
-    <audio id="bg-music" loop autoplay>
-      <source src="song1.m4a" type="audio/mp4" />
+    <audio id="bg-music" loop>
+      <source src="song1.mp3" type="audio/mpeg" />
     </audio>
 
     <!-- Thank You Modal -->
@@ -561,58 +561,36 @@
       }
 
       // --- AUDIO ---
-      let playing = false;
       const music = document.getElementById("bg-music");
-      music.volume = 0.5;
+      const audioIcon = document.getElementById("audio-icon");
 
-      // Try autoplay immediately
-      music
-        .play()
-        .then(() => {
-          playing = true;
-          document.getElementById("audio-icon").innerText = "⏸";
-        })
-        .catch(() => {
-          console.log("Autoplay blocked. Waiting for interaction.");
-        });
+      // Start muted autoplay when page fully loads
+      window.addEventListener("load", () => {
+        music.muted = true;
+        music.volume = 0.5;
+        music.play().catch(() => {});
+        audioIcon.innerText = "🔇";
+      });
 
-      // Unlock audio on first interaction if autoplay failed
-      const unlockAudio = () => {
-        if (!playing) {
-          music
-            .play()
-            .then(() => {
-              playing = true;
-              document.getElementById("audio-icon").innerText = "⏸";
-              cleanupListeners();
-            })
-            .catch((err) =>
-              console.log("Audio play failed on interaction:", err),
-            );
-        }
-      };
-
-      const cleanupListeners = () => {
-        document.removeEventListener("click", unlockAudio);
-        document.removeEventListener("touchstart", unlockAudio);
-        document.removeEventListener("scroll", unlockAudio);
-        document.removeEventListener("keydown", unlockAudio);
-      };
-
-      document.addEventListener("click", unlockAudio);
-      document.addEventListener("touchstart", unlockAudio);
-      document.addEventListener("scroll", unlockAudio);
-      document.addEventListener("keydown", unlockAudio);
+      let isPlaying = true;
+      let isMuted = true;
 
       function toggleAudio() {
-        if (!playing) {
-          music.play().catch(() => {});
-          document.getElementById("audio-icon").innerText = "⏸";
-        } else {
+        if (isMuted) {
+          music.muted = false;
+          music.play();
+          audioIcon.innerText = "⏸";
+          isMuted = false;
+          isPlaying = true;
+        } else if (isPlaying) {
           music.pause();
-          document.getElementById("audio-icon").innerText = "🎵";
+          audioIcon.innerText = "▶";
+          isPlaying = false;
+        } else {
+          music.play();
+          audioIcon.innerText = "⏸";
+          isPlaying = true;
         }
-        playing = !playing;
       }
 
       // --- CALENDAR HINT DELAY ---
