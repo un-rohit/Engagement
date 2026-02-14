@@ -432,11 +432,8 @@
       </button>
     </div>
 
-    <audio id="bg-music" loop preload="none">
-      <source
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-        type="audio/mpeg"
-      />
+    <audio id="bg-music" loop autoplay>
+      <source src="song1.m4a" type="audio/mp4" />
     </audio>
 
     <!-- Thank You Modal -->
@@ -566,6 +563,47 @@
       // --- AUDIO ---
       let playing = false;
       const music = document.getElementById("bg-music");
+      music.volume = 0.5;
+
+      // Try autoplay immediately
+      music
+        .play()
+        .then(() => {
+          playing = true;
+          document.getElementById("audio-icon").innerText = "⏸";
+        })
+        .catch(() => {
+          console.log("Autoplay blocked. Waiting for interaction.");
+        });
+
+      // Unlock audio on first interaction if autoplay failed
+      const unlockAudio = () => {
+        if (!playing) {
+          music
+            .play()
+            .then(() => {
+              playing = true;
+              document.getElementById("audio-icon").innerText = "⏸";
+              cleanupListeners();
+            })
+            .catch((err) =>
+              console.log("Audio play failed on interaction:", err),
+            );
+        }
+      };
+
+      const cleanupListeners = () => {
+        document.removeEventListener("click", unlockAudio);
+        document.removeEventListener("touchstart", unlockAudio);
+        document.removeEventListener("scroll", unlockAudio);
+        document.removeEventListener("keydown", unlockAudio);
+      };
+
+      document.addEventListener("click", unlockAudio);
+      document.addEventListener("touchstart", unlockAudio);
+      document.addEventListener("scroll", unlockAudio);
+      document.addEventListener("keydown", unlockAudio);
+
       function toggleAudio() {
         if (!playing) {
           music.play().catch(() => {});
